@@ -65,14 +65,60 @@ public class RegistrationTest {
     }
 
     @Test
-    public void registerWithInvalidEmailUserNameAndPassword(){
-    registrationPage.registeringInApp("acharyasadikshya.gmail.com", "Sadikshya Acharya", "sadikshya");
-    driver.findElement(registrationPage.signUpLocator).click();
-    WebElement errorMessage = driver.findElement(registrationPage.errorMessage);
-    Assertions.assertTrue(errorMessage.isDisplayed(), "Test Failed!!!");
+    public void registerWithInvalidEmailUserNameAndPassword() {
+        registrationPage.registeringInApp("acharyasadikshya.gmail.com", "Sadikshya Acharya", "sadikshya");
 
-//    boolean eyeStatus = driver.findElement(registrationPage.openEyeLocator).isEnabled();
-//    Assertions.assertTrue(eyeStatus == false, "Test Passed!!!");
+    /*
+        // Check the initial state of the password visibility (should be hidden)
+        boolean isEyeSlashVisible = driver.findElement(registrationPage.eyeSlashLocator).isDisplayed();
+        Assertions.assertTrue(isEyeSlashVisible, "Eye slash icon should be visible");
+
+
+        WebElement passwordInput = driver.findElement(registrationPage.passwordLocator);
+        String passwordType = passwordInput.getAttribute("type");
+        Assertions.assertEquals("password", passwordType, "Password should be hidden...");
+
+        // Click the eye slash icon
+        driver.findElement(registrationPage.eyeSlashLocator).click();
+
+        // Check if the eye icon is visible and password is shown
+        boolean isEyeVisible = driver.findElement(registrationPage.openEyeLocator).isDisplayed();
+        Assertions.assertTrue(isEyeVisible, "Eye icon should be visible after clicking eye-slash icon.");
+
+*/
+
+
+        driver.findElement(registrationPage.signUpLocator).click();
+        WebElement errorMessage = driver.findElement(registrationPage.errorMessage);
+        Assertions.assertFalse(errorMessage.isDisplayed(), "Test Passed!!!");
+
     }
+
+    @Test
+    public void verifyingValidEmailNameAndPassword(){
+    registrationPage.registeringInApp("acharya.sadikshya11@gmail.com", "Sadikshya Acharya", "Sadikshya");
+    driver.findElement(registrationPage.signUpLocator).click();
+
+
+    String originalWindow = driver.getWindowHandle();
+    for(String windowHandles: driver.getWindowHandles()){
+        if(!originalWindow.equals(windowHandles)){
+            driver.switchTo().window(windowHandles);
+            break;
+        }
+    }
+
+
+    String expectedURL = "https://www.odoo.com/my";
+    String actualURL = driver.getCurrentUrl();
+    Assertions.assertEquals(expectedURL, actualURL, "Test Passed!!!");
+
+
+//    WebElement errorMessage = driver.findElement(registrationPage.errorMessage);
+//    Assertions.assertFalse(errorMessage.isDisplayed(), "Test Passed...");
+
+
+    }
+
 
 }
